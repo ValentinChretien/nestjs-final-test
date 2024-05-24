@@ -9,7 +9,7 @@ export class TaskService {
 
   async addTask(name: string, userId: string, priority: number): Promise<Task> {
     const createdTask = new this.taskModel({ name, userId, priority });
-    return createdTask.save();
+    return await createdTask.save();
   }
 
   async getUserTasks(userId: string): Promise<Task[]> {
@@ -17,7 +17,7 @@ export class TaskService {
   }
 
   async resetData(): Promise<void> {
-    await this.taskModel.deleteMany({});
+    await this.taskModel.deleteMany({}).exec();
   }
 
   async getTaskByName(name: string): Promise<Task> {

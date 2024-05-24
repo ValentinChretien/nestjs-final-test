@@ -8,23 +8,19 @@ export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async addUser(email: string): Promise<User> {
-    const existingUser = await this.userModel.findOne({ email }).exec();
-    if (existingUser) {
-      throw new ConflictException('User already exists');
-    }
-    const createdUser = new this.userModel({ email });
-    return createdUser.save();
+      const createdUser = new this.userModel({ email });
+      return await createdUser.save();
   }
 
-  async getUser(email: string): Promise<User> {
+  async getUser(email: string): Promise<User|Boolean> {
     const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
-      throw new NotFoundException('User not found');
+      return false;
     }
     return user;
   }
 
   async resetData(): Promise<void> {
-    await this.userModel.deleteMany({});
+    await this.userModel.deleteMany({}).exec();
   }
 }
